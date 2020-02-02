@@ -1,4 +1,3 @@
-
 // include SPI, MP3 and SD libraries
 #include <SPI.h>
 #include <Adafruit_VS1053.h>
@@ -16,11 +15,16 @@
 // DREQ should be an Int pin, see http://arduino.cc/en/Reference/attachInterrupt
 #define DREQ 3       // VS1053 Data request, ideally an Interrupt pin
 
+const int DELAY_DURATION = 500;
+const int MAX_VOLUME = 0;
+const int MIN_VOLUME = 180;
+const int BOTTOM_Y_BOUNDERY = 345;
+const int TOP_Y_BOUNDERY = 405;
+const int VOLUME_MULTIPLICATOR = 3;
+
 Adafruit_VS1053_FilePlayer musicPlayer = Adafruit_VS1053_FilePlayer(SHIELD_RESET, SHIELD_CS, SHIELD_DCS, DREQ, CARDCS);
 
-int xA;
-int yA;
-int zA;
+int yAxis;
 static const char* const tracks [] = {"/track003.mp3", "/track004.mp3", "/track005.mp3", "/track006.mp3"};
 bool playing = false;
 static const char* current_track = ""; 
@@ -29,7 +33,7 @@ void setup() {
   Serial.begin(9600);
   Serial.println("Adafruit VS1053 Simple Test");
 
-  if (! musicPlayer.begin()) { // initialise the music player
+  if (!musicPlayer.begin()) { // initialise the music player
      Serial.println(F("Couldn't find VS1053, do you have the right pins defined?"));
      while (1);
   }
@@ -41,33 +45,41 @@ void setup() {
   }
 
   // Set volume for left, right channels. lower numbers == louder volume!
-  musicPlayer.setVolume(20,20);
-  srand ( time(NULL) );
+  musicPlayer.setVolume(MIN_VOLUME,MIN_VOLUME);
 }
- 
+
 void loop() {
-  yA = analogRead(A1);
- 
-  if (yA > 390) {
-    Serial.println(" - Y - ist oben");
+  yAxis = analogRead(A1);
+  //Serial.println(yAxis);
+
+  if (yAxis >= BOTTOM_Y_BOUNDERY) {
+    setVolume();
+    //Serial.println(" - Y - ist oben");
     if (playing == false){
-      int random_index = rand() % 4;
-      current_track = tracks[random_index];
-      Serial.println("Start playing "); //  + current_track
+      //Serial.println("Start playing");
       musicPlayer.useInterrupt(VS1053_FILEPLAYER_PIN_INT); 
-      musicPlayer.startPlayingFile(current_track);
+      musicPlayer.startPlayingFile(tracks[random(4)]);
       playing = true;
      }
-     Serial.println("Playing "); //  + current_track
+     //Serial.println("Playing ");
   } else {
-    Serial.println(" - Y - ist nicht oben");
+    //Serial.println(" - Y - ist nicht oben");
     if (playing == true){
       playing = false;
-      Serial.println("Stop playing "); // + current_track
+      //Serial.println("Stop playing ");
       musicPlayer.stopPlaying();
     }
-    Serial.println("Nothing playing");
+    
+    //Serial.println("Nothing playing");
   }
- 
-  delay(1000);
+
+  delay(DELAY_DURATION);
+}
+
+void setVolume() {
+  yAxis = analogRead(A1);
+  int diff = TOP_Y_BOUNDERY - yAxis;
+  diff = (diff < 0 ? 0 : diff);
+  Serial.println(diff * VOLUME_MULTIPLICATOR);
+  musicPlayer.setVolume(diff * VOLUME_MULTIPLICATOR, diff * VOLUME_MULTIPLICATOR);
 }
