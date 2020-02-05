@@ -2,8 +2,6 @@
 #include <SPI.h>
 #include <Adafruit_VS1053.h>
 #include <SD.h>
-#include <stdlib.h>
-#include <time.h>
 
 // These are the pins used for the music maker shield
 #define SHIELD_RESET  -1      // VS1053 reset pin (unused!)
@@ -25,7 +23,7 @@ const int VOLUME_MULTIPLICATOR = 3;
 Adafruit_VS1053_FilePlayer musicPlayer = Adafruit_VS1053_FilePlayer(SHIELD_RESET, SHIELD_CS, SHIELD_DCS, DREQ, CARDCS);
 
 int yAxis;
-static const char* const tracks [] = {"/track003.mp3", "/track004.mp3", "/track005.mp3", "/track006.mp3"};
+static const char* const tracks [] = {"/track001.mp3", "/track002.mp3", "/track003.mp3", "/track004.mp3", "/track005.mp3", "/track006.mp3", "/track007.mp3", "/track008.mp3"};
 bool playing = false;
 static const char* current_track = ""; 
  
@@ -45,25 +43,25 @@ void setup() {
   }
 
   // Set volume for left, right channels. lower numbers == louder volume!
-  musicPlayer.setVolume(MIN_VOLUME,MIN_VOLUME);
+  musicPlayer.setVolume(MIN_VOLUME,MIN_VOLUME); 
 }
 
 void loop() {
   yAxis = analogRead(A1);
-  //Serial.println(yAxis);
+  // Serial.println(yAxis);
 
   if (yAxis >= BOTTOM_Y_BOUNDERY) {
     setVolume();
-    //Serial.println(" - Y - ist oben");
+    Serial.println(" - Y - ist oben");
     if (playing == false){
-      //Serial.println("Start playing");
-      musicPlayer.useInterrupt(VS1053_FILEPLAYER_PIN_INT); 
-      musicPlayer.startPlayingFile(tracks[random(4)]);
+      Serial.println("Start playing");
+      musicPlayer.useInterrupt(VS1053_FILEPLAYER_PIN_INT);
+      musicPlayer.startPlayingFile(tracks[random(8)]);
       playing = true;
      }
      //Serial.println("Playing ");
   } else {
-    //Serial.println(" - Y - ist nicht oben");
+    Serial.println(" - Y - ist nicht oben");
     if (playing == true){
       playing = false;
       //Serial.println("Stop playing ");
@@ -80,6 +78,6 @@ void setVolume() {
   yAxis = analogRead(A1);
   int diff = TOP_Y_BOUNDERY - yAxis;
   diff = (diff < 0 ? 0 : diff);
-  Serial.println(diff * VOLUME_MULTIPLICATOR);
+  //Serial.println(diff * VOLUME_MULTIPLICATOR);
   musicPlayer.setVolume(diff * VOLUME_MULTIPLICATOR, diff * VOLUME_MULTIPLICATOR);
 }

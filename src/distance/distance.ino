@@ -6,15 +6,16 @@
 #define CLK 4  //  PIN 4 für den CLK PIN
 #define DIO 5  //  PIN 5 für den DIO 
 
-const int MAX_GESTURE_DURATION = 5000;
-const int TOP_X_GESTURE_BOUNDRY = 300; //280
-const int BOTTOM_X_GESTURE_BOUNDRY = 380; //400
+const int MAX_GESTURE_DURATION = 3000;
+const int BOTTOM_X_GESTURE_BOUNDRY = 340;
+const int TOP_X_GESTURE_BOUNDRY = 400;
 const int MIN_DISPLAYABLE_DISTANCE = 50;
 const int MAX_DISPLAYABLE_DISTANCE = 1200;
-const int DELAY_DURATION = 500;
+const int DELAY_DURATION = 100;
+const int BLANK_DISPAY_DELAY_DURATION = 3000;
 const int HEADER = 0x59;  //  frame header of data package
 const int GAME_MODE_DISTANCE = 0;
-const int GAME_MODE_RANDOM_DISTNACE = 1;
+const int GAME_MODE_RANDOM_DISTANCE = 1;
 
 Chrono gestureChrono; 
 TM1637Display display(CLK, DIO);
@@ -50,13 +51,13 @@ void setup() {
 void loop() {
   
   if(gestureDetected()) {
-    if(gameMode == GAME_MODE_RANDOM_DISTNACE) {
+    if(gameMode == GAME_MODE_RANDOM_DISTANCE) {
       display.setSegments(blank);
-      delay(DELAY_DURATION*4);
+      delay(BLANK_DISPAY_DELAY_DURATION);
       diplayRandomDistance();
     } else if (gameMode == GAME_MODE_DISTANCE) {
       display.setSegments(blank);
-      delay(DELAY_DURATION*4);
+      delay(BLANK_DISPAY_DELAY_DURATION);
       displayDistance();
     }
     delay(DELAY_DURATION*2);
@@ -69,8 +70,10 @@ void loop() {
 
 bool gestureDetected() {
   xAxis = analogRead(A0);
+
+  Serial.println(xAxis);
   
-  if (xAxis <= TOP_X_GESTURE_BOUNDRY){
+  if (xAxis >= TOP_X_GESTURE_BOUNDRY){
     Serial.println("TOP");
     if (gestureChrono.hasPassed(MAX_GESTURE_DURATION)) {
       gameGestureCounter = 0;
@@ -85,7 +88,7 @@ bool gestureDetected() {
       gameMode = (gameMode == 0 ? 1 : 0);
       return true;
     }
-  } else if (xAxis >= BOTTOM_X_GESTURE_BOUNDRY){
+  } else if (xAxis <= BOTTOM_X_GESTURE_BOUNDRY){
     Serial.println("BOTTOM");
     if (gestureChrono.hasPassed(MAX_GESTURE_DURATION)) {
       gameGestureCounter = 0;
