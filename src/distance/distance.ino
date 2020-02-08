@@ -1,13 +1,10 @@
-#include <Arduino.h>  //  Einbinden der Arduino Bibliothekt
 #include <TM1637Display.h>  //  Einbinden der Bibliothekt zum ansteuern des Displays
-#include <Chrono.h>
 #include<SoftwareSerial.h>  //   header file of software serial port
  
 #define CLK 4  //  PIN 4 für den CLK PIN
 #define DIO 5  //  PIN 5 für den DIO 
+#define push(d) stack[stackptr++] = d
 
-const int MAX_GESTURE_DURATION = 3000;
-const int BOTTOM_X_GESTURE_BOUNDRY = 340;
 const int TOP_X_GESTURE_BOUNDRY = 400;
 const int MIN_DISPLAYABLE_DISTANCE = 50;
 const int MAX_DISPLAYABLE_DISTANCE = 1200;
@@ -16,8 +13,8 @@ const int BLANK_DISPAY_DELAY_DURATION = 3000;
 const int HEADER = 0x59;  //  frame header of data package
 const int GAME_MODE_DISTANCE = 0;
 const int GAME_MODE_RANDOM_DISTANCE = 1;
+const int MAX_STACK_SIZE = 50;
 
-Chrono gestureChrono; 
 TM1637Display display(CLK, DIO);
 SoftwareSerial lidarSerial (2,3);  //  define software serial port name asSerial1 and define pin2 as RX and pin3 as TX
 
@@ -26,15 +23,19 @@ int dist;  //  actual distance measurements of LiDAR
 int check;  //  save check value
 int i; // index
 int uart[9];  //  save data measured by LiDAR
-uint8_t data[] = { 0xff, 0xff, 0xff, 0xff }; //Setzt die Anzahl der möglichen Segmente.
+uint8_t data[] = { 0xff, 0xff, 0xff, 0xff }; // Setzt die Anzahl der möglichen Segmente.
 uint8_t blank[] = { 0x00, 0x00, 0x00, 0x00 };
 
 // Gyro
-int xAxis;
+int xaxis;
+int stack[MAX_STACK_SIZE];
+int stackptr = 0;
+bool filled = false;
+float stackavg;
+float stacklen;
 
 // Game
-int gameGestureCounter = 0;
-int gameMode = 0;
+int gamemode = 0;
 
 void setup() {
  Serial.begin(9600); 
@@ -43,62 +44,40 @@ void setup() {
  display.setBrightness(8);
  display.setSegments(data);
  
- gestureChrono.restart();
-
  delay(DELAY_DURATION);
 }
 
 void loop() {
+  if (stackptr >= MAX_STACK_SIZE){
+    stackptr = 0; 
+    filled = true;
+  }
+
+  xaxis = analogRead(A0);
+ 
+  push(xaxis);
+  stacklen = (filled == true ? MAX_STACK_SIZE : stackptr);
+  stackavg = avg(stack, stacklen);
   
-  if(gestureDetected()) {
-    if(gameMode == GAME_MODE_RANDOM_DISTANCE) {
-      display.setSegments(blank);
-      delay(BLANK_DISPAY_DELAY_DURATION);
+  if(stackavg >= TOP_X_GESTURE_BOUNDRY){
+    display.setSegments(blank);
+    delay(BLANK_DISPAY_DELAY_DURATION);
+    gamemode = (gamemode == 1 ? 0 : 1);
+
+    if(gamemode == GAME_MODE_RANDOM_DISTANCE)
       diplayRandomDistance();
-    } else if (gameMode == GAME_MODE_DISTANCE) {
-      display.setSegments(blank);
-      delay(BLANK_DISPAY_DELAY_DURATION);
+    else if (gamemode == GAME_MODE_DISTANCE)
       displayDistance();
-    }
-    delay(DELAY_DURATION*2);
-  } else if (gameMode == GAME_MODE_DISTANCE) {
+  } else if (gamemode == GAME_MODE_DISTANCE) {
     displayDistance();
   }
-  
-  delay(DELAY_DURATION);
 }
 
-bool gestureDetected() {
-  xAxis = analogRead(A0);
-
-  Serial.println(xAxis);
-  
-  if (xAxis >= TOP_X_GESTURE_BOUNDRY){
-    Serial.println("TOP");
-    if (gestureChrono.hasPassed(MAX_GESTURE_DURATION)) {
-      gameGestureCounter = 0;
-      gestureChrono.restart();
-    } else if (gameGestureCounter == 0){
-      Serial.println(1);
-      gameGestureCounter = 1;
-      gestureChrono.restart();
-    } else if (gameGestureCounter == 2){
-      Serial.println(3);
-      gameGestureCounter = 0;
-      gameMode = (gameMode == 0 ? 1 : 0);
-      return true;
-    }
-  } else if (xAxis <= BOTTOM_X_GESTURE_BOUNDRY){
-    Serial.println("BOTTOM");
-    if (gestureChrono.hasPassed(MAX_GESTURE_DURATION)) {
-      gameGestureCounter = 0;
-      gestureChrono.restart();
-    } else if (gameGestureCounter == 1){
-      Serial.println(2);
-      gameGestureCounter = 2;  
-    }
-  }
-  return false;
+float avg(int *array, int len) {
+  int sum = 0;
+  for (int i = 0 ; i < len ; i++)
+    sum += array[i];
+  return  ((float) sum) / len;
 }
 
 void diplayRandomDistance() {
