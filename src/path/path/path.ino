@@ -13,7 +13,7 @@
 #define DREQ 3       // VS1053 Data request, ideally an Interrupt pin
 
 const int DELAY_DURATION = 100;
-static const char* const TRACK = "/track001.mp3"; 
+static const char* const TRACK = "/path.mp3"; 
 int VOLUME = 0;
 const int HALL_PIN = 5;
 
@@ -47,7 +47,7 @@ void setup() {
 
 void loop() {
   hall = digitalRead(HALL_PIN);
-  //Serial.println(digitalRead(HALL_PIN));
+  Serial.println(digitalRead(HALL_PIN));
 
   if(hall == 0 && playing == false){
     musicPlayer.useInterrupt(VS1053_FILEPLAYER_PIN_INT); 

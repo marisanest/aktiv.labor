@@ -23,7 +23,7 @@ const int VOLUME_MULTIPLICATOR = 3;
 Adafruit_VS1053_FilePlayer musicPlayer = Adafruit_VS1053_FilePlayer(SHIELD_RESET, SHIELD_CS, SHIELD_DCS, DREQ, CARDCS);
 
 int yAxis;
-static const char* const tracks [] = {"/track001.mp3", "/track002.mp3", "/track003.mp3", "/track004.mp3", "/track005.mp3", "/track006.mp3", "/track007.mp3", "/track008.mp3"};
+static const char* const tracks [] = {"/track001.mp3", "/track006.mp3"}; // "/track002.mp3", "/track003.mp3", "/track004.mp3", "/track005.mp3", "/track007.mp3", "/track008.mp3"
 bool playing = false;
 static const char* current_track = ""; 
  
@@ -56,7 +56,10 @@ void loop() {
     if (playing == false){
       Serial.println("Start playing");
       musicPlayer.useInterrupt(VS1053_FILEPLAYER_PIN_INT);
-      musicPlayer.startPlayingFile(tracks[random(8)]);
+      int ran = random(2);
+      Serial.print("random =");
+      Serial.println(ran);
+      musicPlayer.startPlayingFile(tracks[ran]);
       playing = true;
      }
      //Serial.println("Playing ");
