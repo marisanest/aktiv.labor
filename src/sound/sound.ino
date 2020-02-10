@@ -16,21 +16,31 @@
 const int DELAY_DURATION = 500;
 const int MAX_VOLUME = 0;
 const int MIN_VOLUME = 180;
+const int VOLUME_MULTIPLICATOR = 3;
 const int BOTTOM_Y_BOUNDERY = 345;
 const int TOP_Y_BOUNDERY = 405;
-const int VOLUME_MULTIPLICATOR = 3;
+const int TRACKS_COUNT = 9;
 
 Adafruit_VS1053_FilePlayer musicPlayer = Adafruit_VS1053_FilePlayer(SHIELD_RESET, SHIELD_CS, SHIELD_DCS, DREQ, CARDCS);
 
-int yAxis;
-static const char* const tracks [] = {"/track001.mp3", "/track002.mp3", "/track005.mp3", "/track007.mp3", "/track008.mp3", "/track009.mp3", "/track010.mp3", "/track011.mp3"}; // "/track003.mp3", 
+int y_axis;
+static const char* const tracks [TRACKS_COUNT] = 
+{
+  "/track001.mp3", 
+  "/track002.mp3", 
+  "/track003.mp3", 
+  "/track004.mp3", 
+  "/track005.mp3", 
+  "/track006.mp3", 
+  "/track007.mp3", 
+  "/track008.mp3", 
+  "/track009.mp3"
+};
+int current_track_index;
 bool playing = false;
-static const char* current_track = ""; 
-int randomindex;
+int y_axis_diff;
+int current_volume;
 
-//int [] tracks = {0, 6, 7, 8};
-
- 
 void setup() {
   Serial.begin(9600);
   Serial.println("Adafruit VS1053 Simple Test");
@@ -47,46 +57,40 @@ void setup() {
   }
 
   // Set volume for left, right channels. lower numbers == louder volume!
-  musicPlayer.setVolume(MIN_VOLUME,MIN_VOLUME); 
+  resetVolume();
 }
 
 void loop() {
-  yAxis = analogRead(A1);
-  // Serial.println(yAxis);
-
-  if (yAxis >= BOTTOM_Y_BOUNDERY) {
-    setVolume();
+  y_axis = analogRead(A1);
+ 
+  if (y_axis >= BOTTOM_Y_BOUNDERY) {
     Serial.println(" - Y - ist oben");
+    setVolume(y_axis);
     if (playing == false){
-      Serial.println("Start playing");
       musicPlayer.useInterrupt(VS1053_FILEPLAYER_PIN_INT);
-      randomindex = random(8);
-      Serial.print("randomindex = ");
-      Serial.println(randomindex);
-      musicPlayer.startPlayingFile(tracks[randomindex]);
+      current_track_index = random(TRACKS_COUNT);
+      musicPlayer.startPlayingFile(tracks[current_track_index]);
       playing = true;
      } else if (musicPlayer.stopped()) {
-      musicPlayer.startPlayingFile(tracks[randomindex]);
+      musicPlayer.startPlayingFile(tracks[current_track_index]);
      }
-     //Serial.println("Playing ");
   } else {
     Serial.println(" - Y - ist nicht oben");
     if (playing == true){
-      playing = false;
-      //Serial.println("Stop playing ");
+      resetVolume();
       musicPlayer.stopPlaying();
+      playing = false;
     }
-    
-    //Serial.println("Nothing playing");
   }
-
   delay(DELAY_DURATION);
 }
 
-void setVolume() {
-  yAxis = analogRead(A1);
-  int diff = TOP_Y_BOUNDERY - yAxis;
-  diff = (diff < 0 ? 0 : diff);
-  //Serial.println(diff * VOLUME_MULTIPLICATOR);
-  musicPlayer.setVolume(diff * VOLUME_MULTIPLICATOR, diff * VOLUME_MULTIPLICATOR);
+void resetVolume() {
+  musicPlayer.setVolume(MIN_VOLUME, MIN_VOLUME);
+}
+
+void setVolume(int y_axis) {
+  y_axis_diff = TOP_Y_BOUNDERY - y_axis;
+  current_volume = (y_axis_diff < 0 ? 0 : y_axis_diff * VOLUME_MULTIPLICATOR);
+  musicPlayer.setVolume(current_volume, current_volume);
 }
