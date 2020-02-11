@@ -15,11 +15,11 @@
 
 const int DELAY_DURATION = 500;
 const int MAX_VOLUME = 0;
-const int MIN_VOLUME = 180;
-const int VOLUME_MULTIPLICATOR = 3;
+const int MIN_VOLUME = 60;
+const int VOLUME_MULTIPLICATOR = 1;
 const int BOTTOM_Y_BOUNDERY = 345;
 const int TOP_Y_BOUNDERY = 405;
-const int TRACKS_COUNT = 9;
+const int TRACKS_COUNT = 6;
 
 Adafruit_VS1053_FilePlayer musicPlayer = Adafruit_VS1053_FilePlayer(SHIELD_RESET, SHIELD_CS, SHIELD_DCS, DREQ, CARDCS);
 
@@ -31,10 +31,7 @@ static const char* const tracks [TRACKS_COUNT] =
   "/track003.mp3", 
   "/track004.mp3", 
   "/track005.mp3", 
-  "/track006.mp3", 
-  "/track007.mp3", 
-  "/track008.mp3", 
-  "/track009.mp3"
+  "/track006.mp3"
 };
 int current_track_index;
 bool playing = false;
