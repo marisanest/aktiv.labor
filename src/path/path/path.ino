@@ -13,9 +13,15 @@
 #define DREQ 3       // VS1053 Data request, ideally an Interrupt pin
 
 const int DELAY_DURATION = 100;
-static const char* const TRACK = "/path.mp3"; 
 int VOLUME = 0;
 const int HALL_PIN = 5;
+const int TRACKS_COUNT = 2;
+
+static const char* const tracks [TRACKS_COUNT] = {
+  "/path001.mp3", 
+  "/path002.mp3"
+};
+int current_track_index = 0;
 
 Adafruit_VS1053_FilePlayer musicPlayer = Adafruit_VS1053_FilePlayer(SHIELD_RESET, SHIELD_CS, SHIELD_DCS, DREQ, CARDCS);
 
@@ -50,8 +56,9 @@ void loop() {
   Serial.println(digitalRead(HALL_PIN));
 
   if(hall == 0 && playing == false){
-    musicPlayer.useInterrupt(VS1053_FILEPLAYER_PIN_INT); 
-    musicPlayer.startPlayingFile(TRACK);
+    musicPlayer.useInterrupt(VS1053_FILEPLAYER_PIN_INT);
+    current_track_index = (current_track_index == 0 ? 1 : 0);
+    musicPlayer.startPlayingFile(tracks[current_track_index]);
     playing = true;
    } else if (hall == 1 && playing == true){
     musicPlayer.stopPlaying();
