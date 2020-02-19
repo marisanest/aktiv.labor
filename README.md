@@ -52,7 +52,7 @@ Watch our functional [video](https://vimeo.com/392459920) to better understand, 
 
 ## INSTALLATION
 
-All tools are programmed with Arduino. So you first need to install the Arduini IDE on your computer. Then you connect each tool with your computer and run the respective source code on them. For Höribus use the sound.io, for Orienta the path.io and for Distanzo the distance.io file.
+All tools are programmed with Arduino. So you first need to install the [Arduino IDE](https://www.arduino.cc/en/Main/Software) on your computer. Then you connect each tool with your computer and run the respective source code on them. For Höribus use the sound.ino, for Orienta the path.ino and for Distanzo the distance.ino file you find in the equally named folders.
 
 ## TEAM 
 
