@@ -6,7 +6,7 @@ This project was developed in the frame of a multidisciplinary semester course w
 
 To address this topic we defined the following challenge for our project:
 
-How can we sensitize the senses of school children through playful learning to strengthen their knowledge of mobility and skills?
+> How can we sensitize the senses of school children through playful learning to strengthen their knowledge of mobility and skills?
 
 ## PRODUCTS
 
@@ -28,4 +28,11 @@ All tools are programmed with Arduino. So you first need to install the Arduini 
 
 ## TEAM 
 
+* Jacob Sasse (Product Designe)
+* Katharina Bellinger (Product Designe)
+* Mattis Obermann (Product Designe)
+* Marisa Nest (Computer Science)
+
 ## CONTACT
+
+aktiv.labor@gmail.org
