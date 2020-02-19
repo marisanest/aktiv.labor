@@ -10,27 +10,55 @@ To address this topic we defined the following challenge for our project:
 
 ## PRODUCTS
 
-In response to this challenge, we developed three tool: 
+In response to this challenge, we developed three tool: Höribus, Orienta and Distanzo. Höribus...
 
-All tools content Ardunio Hardware and Software.
+Watch our product [video]() to get a better insight, how these tools work.
 
-## HARDWARE
+## HARDWARE & SOFTWARE
 
-### 1. Höribus
+All tools content Ardunio hardware. To be able to run the code on these tools, the follwing hardware is needed for each tool.
 
-### 2. Orienta
+#### Höribus
 
-### 3. Distanzo
+* Arduino Uno
+* Adafruit Music Maker MP3 Shield
+* Adafruit Mono Amplifier
+* 3-axis Accelerometer
+* SD card
+* 9V Battery
+* Speaker
+
+#### Orienta
+
+* Arduino Uno
+* Adafruit Music Maker MP3 Shield
+* Adafruit Mono Amplifier
+* Hall sensor
+* SD card
+* 9V Battery
+* Speaker
+* Magnet
+
+#### Distanzo
+
+* Arduino Mini
+* Lidar sensor
+* 3-axis Accelerometer
+* 4 digit display
+* Switch
+* 9V Battery
+
+Watch our functional [video](https://vimeo.com/392459920) to better understand, how the hardware is tide together.
 
 ## INSTALLATION
 
-All tools are programmed with Arduino. So you first need to install the Arduini IDE on you computer.
+All tools are programmed with Arduino. So you first need to install the Arduini IDE on your computer. Then you connect each tool with your computer and run the respective source code on them. For Höribus use the sound.io, for Orienta the path.io and for Distanzo the distance.io file.
 
 ## TEAM 
 
-* Jacob Sasse (Product Designe)
-* Katharina Bellinger (Product Designe)
-* Mattis Obermann (Product Designe)
+* Jacob Sasse (Product Design)
+* Katharina Bellinger (Product Design)
+* Mattis Obermann (Product Design)
 * Marisa Nest (Computer Science)
 
 Contact us via aktiv.labor@gmail.org.
