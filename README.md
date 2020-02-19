@@ -10,7 +10,13 @@ To address this topic we defined the following challenge for our project:
 
 ## PRODUCTS
 
-In response to this challenge, we developed three tool: Höribus, Orienta and Distanzo. Höribus...
+In response to this challenge, we developed three tool: Höribus, Orienta and Distanzo.
+
+**Höribus** conveys the ability of directional hearing by simulating familiar street sounds inside the safe space of the school. Sounds sampled from the environment help children to practice identifying the direction and nature of the sounds and to serve as a basis for communicating and discussing potential dangers.
+
+**Distanzo** is designed to train the children’s perception of distance, and at a later stage can be used to teach them an awareness of speed and braking distance. The tool facilitates a playful game in which distances can be estimated and checked immediately: kids find it easy and fun to use, either individually or as a team, thanks to the intuitive neo-analog interaction. 
+
+**Orienta** assists the children to train their navigation and orientation skills by practicing paths, like their route to the school, while in a safe space. Digitally enhanced milestones are scattered around the school, communicating with the Orienta device to help kids learn the way.
 
 Watch our product [video]() to get a better insight, how these tools work.
 
