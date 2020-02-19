@@ -33,6 +33,4 @@ All tools are programmed with Arduino. So you first need to install the Arduini 
 * Mattis Obermann (Product Designe)
 * Marisa Nest (Computer Science)
 
-## CONTACT
-
-aktiv.labor@gmail.org
+Contact us via aktiv.labor@gmail.org.
